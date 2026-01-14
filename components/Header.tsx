@@ -2,23 +2,31 @@ import React from 'react';
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-gradient-to-r from-amber-600 to-blue-800 text-white shadow-lg p-4 z-50 flex items-center justify-between">
-      <div className="flex items-center space-x-3">
-        <div className="bg-white rounded-full w-10 h-10 flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+    <header className="bg-gradient-to-r from-blue-900 via-blue-800 to-amber-700 text-white shadow-xl p-4 z-50 flex items-center justify-between border-b border-white/10">
+      <div className="flex items-center space-x-4">
+        <div className="bg-white rounded-xl w-11 h-11 flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
           <img 
-            src="https://p7.hiclipart.com/preview/838/297/128/computer-icons-check-mark-cross-clip-art-x-thumbnail.jpg" 
-            alt="Logo" 
+            src="https://raw.githubusercontent.com/sigtopo/cadgisMaroc/refs/heads/main/cad-setting-2-opposite.png" 
+            alt="CadGIS Logo" 
             className="w-full h-full object-cover"
           />
         </div>
-        <div>
-          <h1 className="text-lg md:text-xl font-black tracking-tighter text-white uppercase leading-none">télécharger données topographique Maroc ©</h1>
-          <p className="text-[9px] md:text-xs text-amber-100 hidden sm:block mt-1 font-medium">Titres fonciers | Bornes | Zonage | Limites ADM</p>
+        <div className="flex flex-col">
+          <h1 className="text-lg md:text-2xl font-black tracking-tighter text-white uppercase leading-none drop-shadow-sm">
+            CadGIS Maroc <span className="text-amber-400">©</span>
+          </h1>
+          <p className="text-[10px] md:text-xs text-blue-100 hidden sm:block mt-1 font-bold opacity-90 uppercase tracking-widest">
+            Plateforme GIS Professionnelle • Données Topographiques
+          </p>
         </div>
       </div>
-      <div className="hidden md:flex space-x-4 text-xs font-bold uppercase tracking-widest">
-        <span className="hover:text-amber-200 cursor-pointer">Tableau de bord</span>
-        <span className="hover:text-amber-200 cursor-pointer">Cartographie</span>
+      <div className="hidden lg:flex items-center space-x-6 text-[11px] font-black uppercase tracking-widest">
+        <a href="/" className="hover:text-amber-400 transition-colors border-b-2 border-amber-400 pb-1">Cartographie</a>
+        <a href="/?page=payment" className="hover:text-amber-400 transition-colors opacity-70 hover:opacity-100">Commander</a>
+        <div className="flex items-center space-x-2 bg-white/10 px-3 py-1.5 rounded-full">
+          <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+          <span className="text-[9px]">Serveur Actif</span>
+        </div>
       </div>
     </header>
   );
