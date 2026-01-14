@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DOWNLOAD_LINKS } from '../constants';
 
@@ -159,7 +158,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ provinceName }) => {
           <img 
             src="https://www.esrifrance.fr/content/dam/distributor-share/esrifrance-fr/produits/en-savoir-plus/produits-apps/arcgis-for-autocad/vue-d%27ensemble/arcgis-for-autocad-220.png" 
             alt="Logo" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover p-1"
           />
         </div>
         <h1 className="h4 mb-1 font-weight-bold">CadGIS Morocco</h1>

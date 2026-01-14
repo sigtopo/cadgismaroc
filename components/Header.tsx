@@ -6,9 +6,9 @@ const Header: React.FC = () => {
       <div className="flex items-center space-x-4">
         <div className="bg-white rounded-xl w-11 h-11 flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
           <img 
-            src="https://raw.githubusercontent.com/sigtopo/cadgisMaroc/refs/heads/main/cad-setting-2-opposite.png" 
+            src="https://www.esrifrance.fr/content/dam/distributor-share/esrifrance-fr/produits/en-savoir-plus/produits-apps/arcgis-for-autocad/vue-d%27ensemble/arcgis-for-autocad-220.png" 
             alt="CadGIS Logo" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover p-1"
           />
         </div>
         <div className="flex flex-col">
