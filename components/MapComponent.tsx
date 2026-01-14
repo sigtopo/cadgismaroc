@@ -37,7 +37,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
   const handleDemander = useCallback(() => {
     if (!selectedProvince) return;
     const paymentUrl = `/?page=payment&province=${encodeURIComponent(selectedProvince)}`;
-    window.open(paymentUrl, '_blank');
+    window.location.href = paymentUrl;
   }, [selectedProvince]);
 
   const zoomToProvince = useCallback((provinceName: string) => {
@@ -205,20 +205,47 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
     }
 
     const normalizedQ = q.toLowerCase().trim();
+    
     const localMatches = allProvinces
       .filter(p => p.toLowerCase().includes(normalizedQ))
-      .map(p => ({ display_name: p, type: 'local', province: p }));
+      .map(p => ({ 
+        display_name: p, 
+        type: 'local',
+        province: p
+      }));
 
-    const combinedLocal = Array.from(new Map(localMatches.map(item => [item.province, item])).values());
+    const combinedLocal = localMatches;
     setSuggestions(combinedLocal);
+
+    if (combinedLocal.length < 3 && q.length >= 3) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + ", Maroc")}&limit=3`);
+        const data = await res.json();
+        const externalResults = data.map((item: any) => ({
+          display_name: item.display_name,
+          lat: item.lat,
+          lon: item.lon,
+          type: 'external'
+        }));
+        setSuggestions(prev => [...prev, ...externalResults]);
+      } catch (err) { 
+        console.error(err); 
+      }
+    }
   };
 
   const goToLocation = (item: any) => {
     if (!mapRef.current) return;
+    
     if (item.type === 'local') {
       onProvinceClick(item.province);
       zoomToProvince(item.province);
+    } else {
+      const coord = ol.proj.fromLonLat([parseFloat(item.lon), parseFloat(item.lat)]);
+      mapRef.current.getView().animate({ center: coord, zoom: 12, duration: 1000 });
+      onProvinceClick(null);
     }
+    
     setSearchQuery(item.display_name);
     setSuggestions([]);
     setIsSearchExpanded(false);
@@ -227,6 +254,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
   return (
     <div className="w-full h-full relative group/map overflow-hidden bg-slate-200">
       <div ref={mapElement} className="w-full h-full" />
+      
       <div 
         ref={popupElement} 
         className={`bg-white shadow-xl rounded-2xl border border-slate-200 p-5 w-64 z-[500] pointer-events-auto transition-all duration-300 transform origin-bottom ${!selectedProvince ? 'opacity-0 scale-75 translate-y-4 pointer-events-none' : 'opacity-100 scale-100 translate-y-0'}`}
@@ -237,6 +265,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
         >
           <i className="fas fa-times text-[10px]"></i>
         </button>
+
         <div className="flex flex-col items-center mb-4">
           <h4 className="text-lg font-bold text-slate-800 uppercase tracking-tight text-center">
             {selectedProvince}
@@ -245,6 +274,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
             {selectedProvince ? (PROVINCE_TO_REGION[selectedProvince.toUpperCase()] || "Région") : ""}
           </span>
         </div>
+        
         <div className="flex justify-center">
           <button 
             onClick={(e) => { e.stopPropagation(); handleDemander(); }}
@@ -253,6 +283,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
             Demander
           </button>
         </div>
+        
         <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-r border-b border-slate-200 rotate-45 rounded-sm"></div>
       </div>
 
@@ -263,6 +294,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
         >
           <i className="fas fa-layer-group text-xl"></i>
         </button>
+        
         {isLayersExpanded && (
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col w-32 animate-in fade-in slide-in-from-top-2">
             {(['OSM', 'Satellite', 'Terrain'] as BaseMapType[]).map(type => (
@@ -276,6 +308,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
             ))}
           </div>
         )}
+
         {!isSearchExpanded ? (
           <button 
             onClick={() => setIsSearchExpanded(true)} 
@@ -308,9 +341,9 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
                   <li 
                     key={idx} 
                     onClick={() => goToLocation(item)} 
-                    className="px-4 py-2.5 hover:bg-blue-50 cursor-pointer border-b border-slate-50 last:border-0 truncate font-bold flex items-center gap-2 text-blue-900"
+                    className={`px-4 py-2.5 hover:bg-blue-50 cursor-pointer border-b border-slate-50 last:border-0 truncate font-bold flex items-center gap-2 ${item.type === 'local' ? 'text-blue-900' : 'text-slate-600 font-medium'}`}
                   >
-                    <i className="fas fa-map-marker-alt text-[8px] text-blue-400"></i>
+                    {item.type === 'local' && <i className="fas fa-map-marker-alt text-[8px] text-blue-400"></i>}
                     {item.display_name}
                   </li>
                 ))}
@@ -319,6 +352,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ selectedProvince, onProvinc
           </div>
         )}
       </div>
+
       <div className="hidden md:flex absolute bottom-6 right-24 z-[400] bg-white/80 backdrop-blur-lg px-4 py-2 rounded-xl border border-white/50 shadow-xl pointer-events-none items-center space-x-2">
         <span className="text-[9px] font-black text-slate-400 uppercase">Coord</span>
         <p className="text-[10px] font-mono text-slate-800 tracking-tight">

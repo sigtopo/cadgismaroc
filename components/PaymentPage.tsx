@@ -15,7 +15,9 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ provinceName }) => {
 
   useEffect(() => {
     document.title = displayTitle;
-    return () => { document.title = "CadGIS Maroc"; };
+    return () => {
+      document.title = "CadGIS Maroc";
+    };
   }, [displayTitle]);
 
   const copyEmail = () => {
@@ -24,57 +26,70 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ provinceName }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleReturn = () => { window.location.href = '/'; };
+  const handleReturn = () => {
+    window.location.href = '/';
+  };
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen pb-12 font-sans">
-      <header className="bg-gradient-to-br from-amber-600 to-blue-800 p-10 text-white text-center shadow-lg">
-        <h1 className="text-2xl font-black uppercase">{displayTitle}</h1>
-        <p className="opacity-80 text-sm mt-2">Titres fonciers | Bornes | Zonage | Limites ADM</p>
+    <div className="payment-page-root bg-[#f8fafc] min-h-screen pb-12">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+      <style>{`
+        .payment-page-root { font-family: 'Inter', sans-serif; }
+        .site-header {
+          background: linear-gradient(135deg, #d97706, #1e40af);
+          padding: 2rem 1rem; color: white; text-align: center;
+        }
+        .payment-card { 
+          width: 92%; max-width: 780px; margin: -20px auto 30px; background: #fff; 
+          border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); 
+          padding: 30px;
+        }
+        .price-badge {
+          display: inline-block; background: #fffbeb; color: #92400e; 
+          border: 1px solid #fde68a; padding: 10px 25px; border-radius: 50px; 
+          font-weight: 800; font-size: 1.2rem; margin: 20px 0;
+        }
+        .info-card {
+          background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 15px;
+          padding: 15px; margin-bottom: 20px; text-align: left;
+        }
+        .back-nav-btn {
+          background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;
+          padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer;
+        }
+      `}</style>
+
+      <header className="site-header">
+        <h1 className="h4 font-weight-bold uppercase">{displayTitle}</h1>
       </header>
 
-      <div className="max-w-3xl mx-auto mt-[-2rem] bg-white rounded-3xl shadow-2xl p-8 border border-slate-100">
-        <button onClick={handleReturn} className="mb-6 flex items-center gap-2 text-green-700 font-bold hover:translate-x-[-5px] transition-transform">
-          <i className="fas fa-chevron-left"></i> Retour à la carte
-        </button>
-
-        <div className="grid grid-cols-5 gap-4 mb-8">
-            <img className="h-8 object-contain" src="https://wraqi.ma/ui/Images/PaymentCashLogo/tashilat_logo.png" alt="Tashilat" />
-            <img className="h-8 object-contain" src="https://wraqi.ma/ui/Images/PaymentCashLogo/barid_cash_logo.png" alt="Barid Cash" />
-            <img className="h-8 object-contain" src="https://wraqi.ma/ui/Images/cash_plus_logo.jpg" alt="Cash Plus" />
-            <img className="h-8 object-contain" src="https://wraqi.ma/ui/Images/PaymentCashLogo/wafa_cash_logo.png" alt="Wafa Cash" />
-            <img className="h-8 object-contain" src="https://wraqi.ma/ui/Images/PaymentCashLogo/daman_cach_logo.png" alt="Damane Cash" />
+      <div className="payment-card">
+        <div className="text-left mb-4">
+          <button onClick={handleReturn} className="back-nav-btn">Retour à la carte</button>
         </div>
 
-        <div className="text-center space-y-6">
-          <h2 className="text-xl font-black text-blue-800">المبلغ الرمزي للحصول على البيانات :</h2>
-          <div className="inline-block bg-amber-50 text-amber-800 border border-amber-200 px-8 py-3 rounded-full text-2xl font-black shadow-inner">
-            500 DH
-          </div>
+        <h5 className="font-weight-bold text-primary mb-3">Virement Bancaire</h5>
+        <div className="price-badge">500 DH</div>
 
-          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-left">
-            <h3 className="font-black uppercase text-xs tracking-widest text-slate-500 mb-4 border-b pb-2">Virement CIH Bank</h3>
-            <div className="flex justify-between items-center">
-                <div>
-                    <span className="block text-[10px] text-slate-400 font-bold uppercase">Compte</span>
-                    <span className="text-lg font-mono font-black text-slate-800">2806724211029200</span>
-                </div>
-                <div className="text-right">
-                    <span className="block text-[10px] text-slate-400 font-bold uppercase">Bénéficiaire</span>
-                    <span className="text-md font-black text-slate-800">Elmostafa JILIT</span>
-                </div>
-            </div>
-          </div>
+        <div className="info-card">
+          <small className="text-muted d-block uppercase font-weight-bold">Numéro de compte (CIH)</small>
+          <div className="h5 font-weight-bold text-dark">2806724211029200</div>
+          <small className="text-muted d-block uppercase font-weight-bold mt-2">Bénéficiaire</small>
+          <div className="h6 font-weight-bold">Elmostafa JILIT</div>
+        </div>
 
-          <div className="flex flex-col gap-4 items-center">
-            <a href="https://wa.me/212668090285" target="_blank" className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-black flex items-center justify-center gap-3 shadow-lg hover:bg-emerald-600 transition-colors">
-                <i className="fab fa-whatsapp text-2xl"></i> Envoyer le reçu sur WhatsApp
-            </a>
-            <div className="flex items-center gap-3 bg-slate-100 px-6 py-2 rounded-xl border border-slate-200">
-                <span className="text-sm font-bold text-slate-600">jilitsig@gmail.com</span>
-                <button onClick={copyEmail} className="bg-red-500 text-white px-3 py-1 rounded-lg text-xs font-bold">{copied ? 'Copié!' : 'Copier'}</button>
-            </div>
+        <div className="info-card">
+          <small className="text-muted d-block uppercase font-weight-bold">RIB National (24 chiffres)</small>
+          <div className="font-weight-bold text-primary text-break" style={{fontSize: '1rem'}}>
+            230010280672421102920011
           </div>
+        </div>
+
+        <div className="mt-4">
+          <p className="small text-muted mb-3">Veuillez envoyer le reçu sur WhatsApp pour activer le téléchargement.</p>
+          <a href="https://wa.me/212668090285" target="_blank" className="btn btn-success btn-block py-3 font-weight-bold rounded-pill">
+            <i className="fab fa-whatsapp mr-2"></i> Envoyer sur WhatsApp
+          </a>
         </div>
       </div>
     </div>

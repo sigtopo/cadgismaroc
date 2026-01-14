@@ -54,7 +54,7 @@ const App: React.FC = () => {
     setFilteredProvinces(filtered);
   }, [searchTerm, regionFilter, provinces]);
 
-  const handleProvinceSelect = (provinceName: string) => {
+  const handleProvinceSelect = (provinceName: string | null) => {
     setSelectedProvince(provinceName);
   };
 
